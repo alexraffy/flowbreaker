@@ -1,0 +1,28 @@
+{
+  "name": "flowbreaker",
+  "description": "A TS library for circuit breaker, flow and queue limiter.",
+  "author": {
+    "name": "ARaffy"
+  },
+  "homepage": "https://github.com/alexraffy/flowbreaker",
+  "keywords": [
+    "circuit breaker",
+    "flow",
+    "queue limiter"
+  ],
+  "version": "1.1.0",
+  "scripts": {
+    "algo-01-build": "tsc",
+    "algo-03-webpack": "webpack",
+    "algo-00-runall": "npm run algo-01-build && npm run algo-03-webpack"
+  },
+  "main": "build/main.js",
+  "types": "build/main.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.6.3",
+    "@types/node": "^17.0.23",
+    "webpack": "^5.71.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
