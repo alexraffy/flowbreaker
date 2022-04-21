@@ -1,0 +1,11 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "scripts": {
+    "flowbreaker-tests-build": "tsc",
+    "flowbreaker-tests-run": "node build/main.js"
+  },
+  "dependencies": {
+    "flowbreaker": "file:.."
+  }
+}

@@ -27,8 +27,11 @@ export function breakerSuccess(breakerId: number, attemptId: number, done: boole
     }
     if (done === true) {
         b.circuitEvents(b.id, b.state);
-        b.done(b.id, attemptId);
+        let done = b.done;
         breakerRemove(breakerId);
+        setTimeout(() => {
+            done(breakerId, attemptId);
+        }, 10);
     } else {
         let nextTry = b.config.closeTimeout;
         if (previousState !== b.state) {

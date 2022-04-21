@@ -26,8 +26,8 @@ export function newFlow(name: string, steps: IFlowStep[], statusUpdate: (flowId:
         id: newId,
         name: name,
         currentStepIndex: 0,
-        breakerId: -1,
-        attemptId: -1,
+        breakerId: 0,
+        attemptId: 0,
         steps: steps,
     };
     Flows.instance.flows.push(f);
@@ -35,8 +35,9 @@ export function newFlow(name: string, steps: IFlowStep[], statusUpdate: (flowId:
     f.breakerId = newBreaker({
         closeThreshold: 1,
         openThreshold: 2,
-        openTimeout: 15000,
-        closeTimeout: 100
+        openTimeout: 100,
+        closeTimeout: 10,
+        openMultiplier: 7.6
         },
         (breakerId, attemptId) => {
             return flowNext(f.id, undefined);

@@ -39,6 +39,7 @@ export function flowCallback(flowId: string | number | undefined, success: boole
         let done = flow.currentStepIndex >= flow.steps.length;
         return breakerSuccess(flow.breakerId, flow.attemptId, done);
     } else {
+        flow.attemptId++;
         return breakerFailure(flow.breakerId, flow.attemptId);
     }
 }

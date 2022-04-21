@@ -23,6 +23,9 @@ export function breakerFailure(breakerId: number, attemptId: number) {
     if (b.attempts.failures.length >= b.config.openThreshold) {
         b.state = kBreakerState.opened;
         nextTry = b.config.openTimeout;
+        if (b.config.openMultiplier !== undefined) {
+            nextTry = parseInt((b.config.openTimeout * b.config.openMultiplier * b.attempts.failures.length).toString());
+        }
     } else {
         nextTry = b.config.closeTimeout;
     }

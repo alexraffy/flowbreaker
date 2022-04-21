@@ -6,4 +6,5 @@ export interface IBreakerConfig {
     openThreshold: number;
     openTimeout: number;
     closeTimeout: number;
+    openMultiplier?: number;
 }

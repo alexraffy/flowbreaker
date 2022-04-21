@@ -21,7 +21,7 @@ export function newBreaker(config: IBreakerConfig = { closeThreshold: 5, openThr
                            exec: (breakerId: number, attemptId: number) => void,
                            done: (breakerId: number, attemptId: number) => void,
                            circuitEvents: (breakerId: number, status: kBreakerState) => void) {
-    let id = Breakers.instance.lastBreakerId++;
+    let id = ++Breakers.instance.lastBreakerId;
     let b: IBreaker = {
         id: id,
         config: config,
@@ -39,7 +39,9 @@ export function newBreaker(config: IBreakerConfig = { closeThreshold: 5, openThr
     }
 
     Breakers.instance.breakers.push(b);
-    _breakerAttempt(id, 0);
+    setTimeout(() => {
+        _breakerAttempt(id, 0);
+    }, 10);
 
     return id;
 }
