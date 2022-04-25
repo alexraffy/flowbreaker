@@ -8,6 +8,7 @@ import {Breakers} from "./newBreaker";
 export function breakerSuccess(breakerId: number, attemptId: number, done: boolean) {
     let b = Breakers.instance.breakers.find((b) => { return b.id === breakerId;});
     if (b === undefined) { return;}
+    b.attempts.failures = [];
     let pendingAttemptIdx = b.attempts.pending.findIndex((a) => { return a.id === attemptId});
     if (pendingAttemptIdx > -1) {
         let pa = b.attempts.pending[pendingAttemptIdx];

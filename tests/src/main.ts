@@ -126,17 +126,19 @@ function test3() {
                     if (attemptId < 10) {
                         return flowCallback(flowId, false, "fail");
                     }
-                    flowCallback(flowId, true, "ok");
+                    flowCallback(flowId, true, "ok", {some:"data"});
                 }
             },
             {
                 name: "step2",
-                run: (flowId: number, breakerId: number, attemptId: number) =>  {
+                run: (flowId: number, breakerId: number, attemptId: number, payload: any) =>  {
+                    assert(payload !== undefined && payload.some === "data", "payload not passed between flows");
                     console.log(new Date().toISOString() + "\t" + "step2 breakerId: " + breakerId + " attemptId: " + attemptId);
                     if (attemptId < 10) {
                         return flowCallback(flowId, false, "fail2");
                     }
-                    flowCallback(flowId, true, "ok2");
+                    payload.more = "data";
+                    flowCallback(flowId, true, "ok2", payload);
                 }
             }
 
@@ -156,7 +158,8 @@ function test3() {
             }
             console.log("STATUS UPDATE breakerStatus: " + sBreakerStatus + " status: " + status)
         },
-        () => {
+        (payload?: any) => {
+            assert(payload !== undefined && payload.some === "data" && payload.more === "data", "payload not sent to done");
             console.log("DONE.");
             process.exit(0);
         });

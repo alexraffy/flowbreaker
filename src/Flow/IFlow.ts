@@ -8,4 +8,5 @@ export interface IFlow {
     attemptId: number;
     currentStepIndex: number;
     steps: IFlowStep[];
+    payload?: any;
 }

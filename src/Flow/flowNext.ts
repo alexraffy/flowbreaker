@@ -43,7 +43,7 @@ export function flowNext(identifier: string | number | undefined, stepId: string
         }
     }
 
-    step.run(flow.id, flow.breakerId, flow.attemptId);
+    step.run(flow.id, flow.breakerId, flow.attemptId, flow.payload);
 
 
 }

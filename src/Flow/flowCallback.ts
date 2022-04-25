@@ -5,7 +5,7 @@ import {breakerSuccess} from "../CircuitBreaker/breakerSuccess";
 import {breakerFailure} from "../CircuitBreaker/breakerFailure";
 
 
-export function flowCallback(flowId: string | number | undefined, success: boolean, status: string) {
+export function flowCallback(flowId: string | number | undefined, success: boolean, status: string, payload: any = undefined) {
 
     if (Flows.instance.flows.length === 0) { return; }
     // find the flow
@@ -25,6 +25,9 @@ export function flowCallback(flowId: string | number | undefined, success: boole
     if (flow === undefined) {
         return;
     }
+    if (payload !== undefined) {
+        flow.payload = payload;
+    }
     // find the step
     let step: IFlowStep = undefined;
     let stepId = flow.currentStepIndex;
@@ -36,6 +39,7 @@ export function flowCallback(flowId: string | number | undefined, success: boole
         } else {
             flow.currentStepIndex++;
         }
+        flow.attemptId = 0;
         let done = flow.currentStepIndex >= flow.steps.length;
         return breakerSuccess(flow.breakerId, flow.attemptId, done);
     } else {

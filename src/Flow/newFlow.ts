@@ -4,6 +4,8 @@ import {IFlowStep} from "./IFlowStep";
 import {breakerSuccess} from "../CircuitBreaker/breakerSuccess";
 import {kBreakerState} from "../CircuitBreaker/kBreakerState";
 import {flowNext} from "./flowNext";
+import {IBreakerConfig} from "../CircuitBreaker/IBreakerConfig";
+import {flowExit} from "./flowExit";
 
 
 export class Flows {
@@ -20,7 +22,17 @@ export class Flows {
 var flows = new Flows();
 
 
-export function newFlow(name: string, steps: IFlowStep[], statusUpdate: (flowId: number, breakerStatus: kBreakerState, status: string) => void, done: () => void): number {
+export function newFlow(name: string,
+                        steps: IFlowStep[],
+                        statusUpdate: (flowId: number, breakerStatus: kBreakerState, status: string) => void,
+                        done: (payload?: any) => void,
+                        breakerConfig: IBreakerConfig = {
+                            closeThreshold: 1,
+                            openThreshold: 2,
+                            openTimeout: 100,
+                            closeTimeout: 10,
+                            openMultiplier: 7.6
+                        }): number {
     let newId = ++Flows.instance.lastFlowId;
     let f: IFlow = {
         id: newId,
@@ -32,18 +44,12 @@ export function newFlow(name: string, steps: IFlowStep[], statusUpdate: (flowId:
     };
     Flows.instance.flows.push(f);
 
-    f.breakerId = newBreaker({
-        closeThreshold: 1,
-        openThreshold: 2,
-        openTimeout: 100,
-        closeTimeout: 10,
-        openMultiplier: 7.6
-        },
+    f.breakerId = newBreaker(breakerConfig,
         (breakerId, attemptId) => {
             return flowNext(f.id, undefined);
         },
         (breakerId, attemptId) => {
-            queueMicrotask( () => { done(); });
+            queueMicrotask( () => { flowExit(f.id); done(f.payload); });
         }, (breakerId, status) => {
             queueMicrotask( () => { statusUpdate(f.id, status, "BreakerStatus"); } );
         });
@@ -51,21 +57,3 @@ export function newFlow(name: string, steps: IFlowStep[], statusUpdate: (flowId:
     return newId;
 }
 
-
-
-/*
-    newFlow("downloadPreferences",
-     [{
-        name: "paths"
-        required: true,
-        run: (flowId: number) => { SkeletWebSocket.instance.send(WSRPaths, {}); }
-        callback: (flowId: number, ret: any) => { let flow = findFlow(flowId); return flow.currentStepIndex + 1; }
-    },
-    {
-        name: "fonts",
-        required: true,
-        run: (flowId: number) => { SkeletWebSocket.instance.send(WSRFonts, {}); }
-        callback: (flowId: number, ret: any) => { let flow = findFlow(flowId); return flow.currentStepIndex + 1; }
-    });
-
- */

@@ -10,7 +10,7 @@
     "flow",
     "queue limiter"
   ],
-  "version": "1.1.1",
+  "version": "1.1.2",
   "scripts": {
     "algo-01-build": "tsc",
     "algo-03-webpack": "webpack",
